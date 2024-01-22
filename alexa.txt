@@ -1,0 +1,52 @@
+import datetime
+import wikipedia
+import pywhatkit
+import pyjokes
+import speech_recognition as sr
+import pyttsx3
+e=pyttsx3.init()
+voices=e.getProperty('voices')
+e.setProperty('voice',voices[1].id)
+l=sr.Recognizer()
+cp='ppp'
+def talk(txt: object) -> object:
+    e.say(txt)
+    e.runAndWait()
+def take_command():
+    try:
+        talk("Hello")
+        with sr.Microphone as source:
+            talk("Listening")
+            print("Listening")
+            v=l.listen(source)
+            c=l.recognize_google(v)
+            c=c.lower()
+            if 'alexa' in c:
+                c.replace('alexa','')
+                print(c)
+                cp=c
+    except:
+        print("No connection")
+def run_alexa():
+    take_command()
+    if 'play' in cp:
+        s=cp.replace('play','')
+        talk("Playing"+s)
+        pywhatkit.playonyt(s)
+    elif 'time' in cp:
+        time=datetime.datetime.now().strftime('%I:%M %p')
+        print(time)
+        talk("Current time is "+time)
+    elif 'who is' in cp:
+        x=cp.replace('who is','')
+        info=wikipedia.summary(x,1)
+        print(info)
+        talk(info)
+    elif 'are you single' in cp:
+        talk("I am in an open relaion ship with pinak")
+    elif 'joke' in cp:
+        talk(pyjokes.get_joke())
+    else:
+        print("I did't get you connect me again")
+        talk("I did't get you connect me again")
+run_alexa()
